@@ -9,9 +9,7 @@ import matplotlib.pyplot as plt
 
 class Aurora_pix2pix:
     def __init__(self):
-        self.model_file_path = (
-            "/Users/ogawa/Desktop/desktop_folders/data/latest_net_G.pth"
-        )
+        self.model_file_path = "/Users/ogawa/Desktop/desktop_folders/aurora_pix2pix/pix2pix/latest_net_G.pth"
         self.device = torch.device("cpu")
 
     def load_pix2pix_generator(

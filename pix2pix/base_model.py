@@ -198,7 +198,7 @@ class BaseModel(ABC):
         for name in self.model_names:
             if isinstance(name, str):
                 load_filename = "%s_net_%s.pth" % (epoch, name)
-                load_path = "/Users/ogawa/Desktop/desktop_folders/data/latest_net_G.pth"
+                load_path = "/Users/ogawa/Desktop/desktop_folders/aurora_pix2pix/pix2pix/latest_net_G.pth"
                 net = getattr(self, "net" + name)
                 if isinstance(net, torch.nn.DataParallel):
                     net = net.module

@@ -14,9 +14,7 @@ class Preprocess:
         self.DATA_DIRECTORY = os.getenv(
             "DATA_DIRECTORY", "/Users/ogawa/Desktop/desktop_folders/data"
         )
-        self.model_file_path = (
-            "/Users/ogawa/Desktop/desktop_folders/data/latest_net_G.pth"
-        )
+        self.model_file_path = "/Users/ogawa/Desktop/desktop_folders/aurora_pix2pix/pix2pix/latest_net_G.pth"
         # input_img_path, output_img_path
         self.model = Aurora_pix2pix()
         self.netG = self.model.load_pix2pix_generator(self.model_file_path)
