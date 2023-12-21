@@ -125,8 +125,9 @@ def main():
     #     )
     #     fits = FitsHandler(path)
     #     fits_title = path.split("/")[-1]
+    #     fits.resolution(epoch_second_mag, freq_second_mag)
+
     #     fits_changed_resolution = fits.resolution(epoch_second_mag, freq_second_mag)
-    # fits.resolution(epoch_second_mag, freq_second_mag)
 
     # show_fullimg(
     #     fits_title,
