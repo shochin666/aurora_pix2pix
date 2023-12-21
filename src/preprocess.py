@@ -15,7 +15,6 @@ class Preprocess:
             "DATA_DIRECTORY", "/Users/ogawa/Desktop/desktop_folders/data"
         )
         self.model_file_path = "/Users/ogawa/Desktop/desktop_folders/aurora_pix2pix/pix2pix/latest_net_G.pth"
-        # input_img_path, output_img_path
         self.model = Aurora_pix2pix()
         self.netG = self.model.load_pix2pix_generator(self.model_file_path)
 
@@ -23,9 +22,7 @@ class Preprocess:
         self.fits_changed_resolution = fits_original.resolution(
             epoch_second_mag, freq_second_mag
         )
-        self.fits_title = fits_original.path.split("/")[-1].split(".")[
-            0
-        ]  # JUPITER_TRACKING_20201216_100033_2
+        self.fits_title = fits_original.path.split("/")[-1].split(".")[0]
 
     def optimize_fits_size(self):
         height, width = self.fits_changed_resolution.shape
@@ -61,7 +58,7 @@ class Preprocess:
                 data = np.array(fits[i * 256 : 256 * (i + 1), j * 256 : 256 * (j + 1)])
                 cv2.imwrite(save_file_path, data)
 
-    def predict_and_concatenate(self):
+    def predict_and_concatenate(self, filter_depth):
         self.reconstructed_jpg = np.zeros((self.optimized_height, self.optimized_width))
 
         translated_jpg_directory_path = os.path.join(
@@ -89,9 +86,10 @@ class Preprocess:
                 self.reconstructed_jpg[
                     i * 256 : 256 * (i + 1), j * 256 : 256 * (j + 1)
                 ] = translated_data
+
         self.reconstructed_jpg = min_max(self.reconstructed_jpg.copy())
         self.reconstructed_jpg = np.where(
-            self.reconstructed_jpg < 150, 0, self.reconstructed_jpg
+            self.reconstructed_jpg < filter_depth, 0, self.reconstructed_jpg
         )
 
         # print(
@@ -110,6 +108,3 @@ class Preprocess:
             ),
             self.reconstructed_jpg[::-1, :],
         )
-        # hoge = cv2.imread(
-        #     os.path.join(saved_jpg_directory, "reconstructed.jpg"),
-        # )
