@@ -13,9 +13,9 @@ from src import (
 if __name__ == "__main__":
     # parser init
     parser = argparse.ArgumentParser(description="")
-    parser.add_argument("--date")  # example)19910103
-    parser.add_argument("--extension")  # fits or cdf
-    parser.add_argument("--highlight")  # true or false
+    parser.add_argument("--date", type=str)  # example)19910103
+    parser.add_argument("--extension", type=str)  # fits or cdf
+    parser.add_argument("--highlight", type=bool)  # true or false
     args = parser.parse_args()
 
     epoch_second_mag, freq_second_mag = (2, 2)

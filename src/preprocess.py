@@ -10,7 +10,7 @@ from .normalize import min_max
 
 
 class Preprocess:
-    def __init__(self, fits_original, epoch_second_mag, freq_second_mag):
+    def __init__(self, data_original, epoch_second_mag, freq_second_mag, extension):
         self.DATA_DIRECTORY = os.getenv(
             "DATA_DIRECTORY", "/Users/ogawa/Desktop/desktop_folders/data"
         )
@@ -18,14 +18,14 @@ class Preprocess:
         self.model = Aurora_pix2pix()
         self.netG = self.model.load_pix2pix_generator(self.model_file_path)
 
-        self.fits_original = fits_original
-        self.fits_changed_resolution = fits_original.resolution(
+        self.data_original = data_original
+        self.data_changed_resolution = data_original.resolution(
             epoch_second_mag, freq_second_mag
         )
-        self.fits_title = fits_original.path.split("/")[-1].split(".")[0]
+        self.data_title = data_original.path.split("/")[-1].split(".")[0]
 
-    def optimize_fits_size(self):
-        height, width = self.fits_changed_resolution.shape
+    def optimize_data_size(self):
+        height, width = self.data_changed_resolution.shape
         self.horizontal_loop = width // 256
         self.vertical_loop = height // 256
 
@@ -35,18 +35,18 @@ class Preprocess:
         )
 
         # 後で使う
-        self.optimized_epoch = self.fits_original.epoch_new[: self.optimized_width]
-        self.optimized_freq = self.fits_original.freq_new[: self.optimized_height]
+        self.optimized_epoch = self.data_original.epoch_new[: self.optimized_width]
+        self.optimized_freq = self.data_original.freq_new[: self.optimized_height]
 
-        self.fits_optimized = self.fits_changed_resolution.copy()[
+        self.data_optimized = self.data_changed_resolution.copy()[
             : self.optimized_height, : self.optimized_width
         ]
 
-    def separate_fits(self):
-        fits = np.array(self.fits_optimized.copy())
+    def separate_data(self):
+        whole_data = np.array(self.data_optimized.copy())
 
         self.save_directory_path = os.path.join(
-            self.DATA_DIRECTORY, f"out/separate/{self.fits_title}"
+            self.DATA_DIRECTORY, f"out/separate/{self.data_title}"
         )
 
         # separateファイル保存先ディレクトリ作成
@@ -55,14 +55,16 @@ class Preprocess:
         for i in range(self.vertical_loop):
             for j in range(self.horizontal_loop):
                 save_file_path = os.path.join(self.save_directory_path, f"{i}_{j}.jpg")
-                data = np.array(fits[i * 256 : 256 * (i + 1), j * 256 : 256 * (j + 1)])
+                data = np.array(
+                    whole_data[i * 256 : 256 * (i + 1), j * 256 : 256 * (j + 1)]
+                )
                 cv2.imwrite(save_file_path, data)
 
     def predict_and_concatenate(self, filter_depth):
         self.reconstructed_jpg = np.zeros((self.optimized_height, self.optimized_width))
 
         translated_jpg_directory_path = os.path.join(
-            self.DATA_DIRECTORY, f"out/separate/tmp_{self.fits_title}"
+            self.DATA_DIRECTORY, f"out/separate/tmp_{self.data_title}"
         )
 
         # shutil.rmtree(saved_jpg_directory)
@@ -104,7 +106,7 @@ class Preprocess:
         cv2.imwrite(
             os.path.join(
                 self.DATA_DIRECTORY,
-                f"out/separate{self.fits_title}.jpg",
+                f"out/RECONSTUCTED_{self.data_title}.jpg",
             ),
             self.reconstructed_jpg[::-1, :],
         )
