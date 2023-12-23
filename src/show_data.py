@@ -4,10 +4,10 @@ import matplotlib.pyplot as plt
 import cv2
 
 
-def show_fullimg(title, target, cut_size, data, epoch, freq, target_highlight=False):
+def show_fullimg(title, target, cut_size, data, epoch, freq, target_highlight):
     target_x, target_y = target
     cut_size_x, cut_size_y = cut_size
-    _cdf = data.copy()
+    cdf = data.copy()
 
     X, Y = np.meshgrid(
         epoch,
@@ -16,7 +16,7 @@ def show_fullimg(title, target, cut_size, data, epoch, freq, target_highlight=Fa
 
     if target_highlight:
         try:
-            _cdf[
+            cdf[
                 target_y : target_y + cut_size_x,
                 target_x : target_x + cut_size_y,
             ] = 170
@@ -25,7 +25,7 @@ def show_fullimg(title, target, cut_size, data, epoch, freq, target_highlight=Fa
 
     plt.figure(figsize=(12, 5))
     plt.gca().xaxis.set_major_formatter(mdates.DateFormatter("%H:%M"))
-    plt.pcolormesh(X, Y, np.array(_cdf), cmap="jet")
+    plt.pcolormesh(X, Y, np.array(cdf), cmap="jet")
     plt.title(f"{title}{data.shape}")
     plt.colorbar()
     plt.show()

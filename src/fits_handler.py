@@ -86,12 +86,12 @@ class FitsHandler:
 
         return self.data_new
 
-    def cut_fits(self, target):
+    def cut_fits(self, target, x_range, y_range):
         target_x, target_y = target
         data = self.data_new.copy()
 
-        k = random.randint(-300, 300)
-        l = random.randint(-50, 50)
+        k = random.randint(0, x_range)
+        l = random.randint(0, y_range)
 
         x_axis_beginning = target_x + k
         y_axis_beginning = target_y + l

@@ -49,13 +49,13 @@ class CdfHandler:
 
         return self.data_new
 
-    def cut_cdf(self, target):
+    def cut_cdf(self, target, x_range, y_range):
         target_x, target_y = target
         data = self.data_new.copy()
 
         # init(乱数を2つ発生させてターゲット画像の四隅の座標のベンチマークを作成)
-        k = random.randint(-1000, 1000)
-        l = random.randint(-200, 200)
+        k = random.randint(0, x_range)
+        l = random.randint(0, y_range)
 
         x_axis_beginning = target_x + k
         y_axis_beginning = target_y + l
