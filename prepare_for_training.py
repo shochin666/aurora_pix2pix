@@ -3,6 +3,7 @@ import random
 import argparse
 import glob
 import cv2
+import shutil
 
 from src import (
     CdfHandler,
@@ -25,11 +26,34 @@ if __name__ == "__main__":
     parser.add_argument("--fits_date", type=str, default="")
     parser.add_argument("--random_file_num", type=int)
     parser.add_argument("--integration_file_num", type=int)
+    parser.add_argument("--integration", action="store_true")
     args = parser.parse_args()
+
+    sanitized_dirs = [
+        os.path.join(META_DATA_DIRECTORY, "out/random/cdf"),
+        os.path.join(META_DATA_DIRECTORY, "out/random/fits"),
+        os.path.join(META_DATA_DIRECTORY, "out/random/cdf1"),
+        os.path.join(META_DATA_DIRECTORY, "out/random/cdf2"),
+    ]
 
     random_file_num = args.random_file_num
     integration_file_num = args.integration_file_num
     epoch_second_mag, freq_second_mag = (2, 2)
+    existing_train_files = glob.glob(
+        os.path.join(
+            META_DATA_DIRECTORY,
+            "out/train/A/*",
+        )
+    )
+    existing_test_files = glob.glob(
+        os.path.join(
+            META_DATA_DIRECTORY,
+            "out/test/A/*",
+        )
+    )
+    len_train_file = len(existing_train_files)  # 存在しているtrainファイル数
+    len_test_file = len(existing_test_files)
+
     cdf_combo = False
 
     # CDFとFITSのconcat
@@ -45,13 +69,14 @@ if __name__ == "__main__":
         cdf.resolution(epoch_second_mag, freq_second_mag)
 
         for i in range(random_file_num):
-            cdf_target = (1810, 1000)
+            cdf_target = (465, 1450)
+            x_range, y_range = (165, 0)
 
             random_cdf_save_path = os.path.join(
                 META_DATA_DIRECTORY,
                 f"out/random/cdf/{i}.cdf",
             )
-            data, epoch, freq = cdf.cut_cdf(cdf_target)
+            data, epoch, freq = cdf.cut_cdf(cdf_target, x_range, y_range)
 
             m = random.randint(-100, 100)
 
@@ -62,9 +87,7 @@ if __name__ == "__main__":
             elif 0 < m <= 50:
                 save_as_cdf(data, epoch, freq, random_cdf_save_path)
             elif 50 < m <= 100:
-                save_as_cdf(
-                    data[::-1, ::-1], epoch, freq, random_cdf_save_path
-                )  # out/random/cdf以下に保存
+                save_as_cdf(data[::-1, ::-1], epoch, freq, random_cdf_save_path)
 
         # FITS
         fits_directory_path = os.path.join(
@@ -72,7 +95,7 @@ if __name__ == "__main__":
             "fits",
             args.fits_date,
         )
-        target = (600, 200)
+        fits_target = (1400, 0)
 
         files = glob.glob(os.path.join(fits_directory_path, "*"))
         fits_title = files[0].split("/")[-1]
@@ -85,9 +108,9 @@ if __name__ == "__main__":
                 f"out/random/fits/{i}.fits",
             )
 
-            x_range, y_range = (1810, 1000)
+            x_range, y_range = (1100, 30)
 
-            data, epoch, freq = fits.cut_fits(target, x_range, y_range)
+            data, epoch, freq = fits.cut_fits(fits_target, x_range, y_range)
 
             m = random.randint(-100, 100)
 
@@ -96,9 +119,9 @@ if __name__ == "__main__":
                 cv2.imwrite(
                     os.path.join(
                         META_DATA_DIRECTORY,
-                        f"out/random/noise/{i}.jpg",
+                        f"out/random/noise_jpg/{i + len_train_file}.jpg",
                     ),
-                    data[::-1, :],
+                    data.T[::-1, :],
                 )
 
             elif -50 < m <= 0:
@@ -106,9 +129,9 @@ if __name__ == "__main__":
                 cv2.imwrite(
                     os.path.join(
                         META_DATA_DIRECTORY,
-                        f"out/random/noise/{i}.jpg",
+                        f"out/random/noise_jpg/{i + len_train_file}.jpg",
                     ),
-                    data[:, ::-1],
+                    data.T[:, ::-1],
                 )
 
             elif 0 < m <= 50:
@@ -116,9 +139,9 @@ if __name__ == "__main__":
                 cv2.imwrite(
                     os.path.join(
                         META_DATA_DIRECTORY,
-                        f"out/random/noise/{i}.jpg",
+                        f"out/random/noise_jpg/{i + len_train_file}.jpg",
                     ),
-                    data,
+                    data.T,
                 )
 
             elif 50 < m <= 100:
@@ -126,14 +149,14 @@ if __name__ == "__main__":
                 cv2.imwrite(
                     os.path.join(
                         META_DATA_DIRECTORY,
-                        f"out/random/noise/{i}.jpg",
+                        f"out/random/noise_jpg/{i + len_train_file}.jpg",
                     ),
-                    data,
+                    data.T[::-1, ::-1],
                 )
 
     # CDFを2つでconcat
     if len(args.cdf1_date) and len(args.cdf2_date):
-        cdf1_target = (1810, 1000)
+        cdf1_target = (1980, 680)
         cdf2_target = (2710, 1250)
 
         cdf_combo = True
@@ -164,7 +187,7 @@ if __name__ == "__main__":
                 f"out/random/cdf1/{i}.cdf",
             )
 
-            x_range, y_range = (180, 650)
+            x_range, y_range = (0, 220)
 
             data, epoch, freq = cdf1.cut_cdf(cdf1_target, x_range, y_range)
 
@@ -196,7 +219,7 @@ if __name__ == "__main__":
                 cv2.imwrite(
                     os.path.join(
                         META_DATA_DIRECTORY,
-                        f"out/random/noise/{i}.jpg",
+                        f"out/random/noise_jpg/{i + len_train_file}.jpg",
                     ),
                     data[::-1, :],
                 )
@@ -206,7 +229,7 @@ if __name__ == "__main__":
                 cv2.imwrite(
                     os.path.join(
                         META_DATA_DIRECTORY,
-                        f"out/random/noise/{i}.jpg",
+                        f"out/random/noise_jpg/{i + len_train_file}.jpg",
                     ),
                     data[:, ::-1],
                 )
@@ -216,7 +239,7 @@ if __name__ == "__main__":
                 cv2.imwrite(
                     os.path.join(
                         META_DATA_DIRECTORY,
-                        f"out/random/noise/{i}.jpg",
+                        f"out/random/noise_jpg/{i + len_train_file}.jpg",
                     ),
                     data,
                 )
@@ -226,14 +249,20 @@ if __name__ == "__main__":
                 cv2.imwrite(
                     os.path.join(
                         META_DATA_DIRECTORY,
-                        f"out/random/noise/{i}.jpg",
+                        f"out/random/noise_jpg/{i + len_train_file}.jpg",
                     ),
                     data[::-1, ::-1],
                 )
 
     # integration
-    for i in range(integration_file_num * 3 // 4):
-        integration_for_training(i, integration_file_num, cdf_combo)
+    for i in range(integration_file_num * 3 // 4):  # 75%をテスト用にintegration
+        integration_for_training(i + len_train_file, integration_file_num, cdf_combo)
 
-    for i in range(integration_file_num // 4):  # 25%の枚数をテスト用にintegration
-        integration_for_testing(i, integration_file_num, cdf_combo)
+    for i in range(integration_file_num // 4):  # 25%をテスト用にintegration
+        integration_for_testing(i + len_test_file, integration_file_num, cdf_combo)
+
+    # 一時的に用いたディレクトリをsanitize
+    for path in sanitized_dirs:
+        shutil.rmtree(path)
+        os.mkdir(path)
+        print(f"{path}を削除しました")

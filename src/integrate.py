@@ -13,7 +13,7 @@ DATA_DIRECTORY = os.getenv(
 
 def integration_for_training(out_file_index, last_file_num, cdf_combo=False):
     if cdf_combo:
-        k, l = (random.randint(0, last_file_num - 1) for _ in range(2))
+        k, l = (random.randint(0, last_file_num * 3 // 4 - 1) for _ in range(2))
         random_cdf1_path = f"{DATA_DIRECTORY}/out/random/cdf1/{k}.cdf"
         random_cdf2_path = f"{DATA_DIRECTORY}/out/random/cdf2/{k}.cdf"
 
@@ -28,7 +28,7 @@ def integration_for_training(out_file_index, last_file_num, cdf_combo=False):
         cv2.imwrite(f"{DATA_DIRECTORY}/out/train/B/{out_file_index}.jpg", cdf1)
 
     else:
-        k, l = (random.randint(0, last_file_num - 1) for _ in range(2))
+        k, l = (random.randint(0, last_file_num * 3 // 4 - 1) for _ in range(2))
         random_cdf_path = f"{DATA_DIRECTORY}/out/random/cdf/{k}.cdf"
         random_fits_path = f"{DATA_DIRECTORY}/out/random/fits/{l}.fits"
 
@@ -47,7 +47,7 @@ def integration_for_training(out_file_index, last_file_num, cdf_combo=False):
 
 def integration_for_testing(out_file_index, last_file_num, cdf_combo=False):
     if cdf_combo:
-        k, l = (random.randint(0, last_file_num - 1) for _ in range(2))
+        k, l = (random.randint(0, last_file_num // 4 - 1) for _ in range(2))
         random_cdf1_path = f"{DATA_DIRECTORY}/out/random/cdf1/{k}.cdf"
         random_cdf2_path = f"{DATA_DIRECTORY}/out/random/cdf2/{k}.cdf"
 
@@ -60,7 +60,7 @@ def integration_for_testing(out_file_index, last_file_num, cdf_combo=False):
         cv2.imwrite(f"{DATA_DIRECTORY}/out/test/B/{out_file_index}.jpg", cdf1)
 
     else:
-        k, l = (random.randint(0, last_file_num - 1) for _ in range(2))
+        k, l = (random.randint(0, last_file_num // 4 - 1) for _ in range(2))
         random_cdf_path = f"{DATA_DIRECTORY}/out/random/cdf/{k}.cdf"
         random_fits_path = f"{DATA_DIRECTORY}/out/random/fits/{l}.fits"
 
