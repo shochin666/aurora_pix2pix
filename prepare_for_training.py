@@ -4,6 +4,7 @@ import argparse
 import glob
 import cv2
 import shutil
+import numpy as np
 
 from src import (
     CdfHandler,
