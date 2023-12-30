@@ -79,6 +79,7 @@ if __name__ == "__main__":
             )
             data, epoch, freq = cdf.cut_cdf(cdf_target, x_range, y_range)
 
+            data = np.where(data < 75, 0, data)  # 80
             m = random.randint(-100, 100)
 
             if m <= -50:
@@ -191,6 +192,7 @@ if __name__ == "__main__":
             x_range, y_range = (0, 220)
 
             data, epoch, freq = cdf1.cut_cdf(cdf1_target, x_range, y_range)
+            data = np.where(data < 80, 0, data)
 
             m = random.randint(-100, 100)
 

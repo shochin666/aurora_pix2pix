@@ -31,7 +31,7 @@ if __name__ == "__main__":
     )  #  example)/Users/ogawa/Desktop/desktop_folders/data/cdf/19910103
 
     if args.extension == "cdf":
-        highlight_target = (2710, 1250)  # 180が線同士の間の目安 2710~2890, 1250~1310
+        highlight_target = (2710, 1250)
         highlight_size = (256, 256)
         files = glob.glob(os.path.join(data_directory_path, "*"))
         cdf_title = files[0].split("/")[-1]
@@ -49,7 +49,9 @@ if __name__ == "__main__":
         )
 
     elif args.extension == "fits":
-        highlight_target = (300, 200)
+        highlight_target = (1180, 800)  # 20201216
+        # highlight_target = (2900, 850)  # 20220112
+
         highlight_size = (256, 256)
         files = glob.glob(os.path.join(data_directory_path, "*"))
         fits_title = files[0].split("/")[-1]

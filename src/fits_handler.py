@@ -8,31 +8,79 @@ import datetime
 
 class FitsHandler:
     def __init__(self, path):
+        date = str(path.split("/")[-2])
         hdulist = fits.open(path)
-        tmp_freq = np.array(hdulist[8].data)
+
+        # dateによってデータの構造が変わる -> まじでクソ
+        if date == "20201216":
+            tmp_freq = np.array(hdulist[8].data)
+        elif date == "20201221":
+            tmp_freq = np.array(hdulist[6].data)
+        elif date == "20201106":
+            tmp_freq = np.array(hdulist[6].data)
+        elif date == "20201107":
+            tmp_freq = np.array(hdulist[6].data)
+        elif date == "20220112":
+            tmp_freq = np.array(hdulist[8].data)
 
         # 異常箇所のindexを取ってくる
-        self.freq_turningpoint = [
+        self.freq_turningpoints = [
             i + 1 for i in range(len(tmp_freq) - 1) if tmp_freq[i + 1] - tmp_freq[i] < 0
-        ][0]
+        ]
 
         # もし異常がなかったらそのまま最後のindexを代入する
-        if not self.freq_turningpoint:
+        if len(self.freq_turningpoints):
+            self.freq_turningpoint = self.freq_turningpoints[0]
+
+        else:
             self.freq_turningpoint = len(tmp_freq) - 1
 
         self.path = path
-        self.data = 10 * np.log10(hdulist[3].data)[: self.freq_turningpoint, :]
+
+        if date == "20201216":  # とくｓｇｙ
+            self.data = 10 * np.log10(hdulist[3].data)[: self.freq_turningpoint, :]
+        elif date == "20201221":
+            self.data = 10 * np.log10(hdulist[3].data[0])[: self.freq_turningpoint, :]
+        elif date == "20201106":
+            self.data = 10 * np.log10(hdulist[3].data[0])[: self.freq_turningpoint, :]
+        elif date == "20201107":
+            # self.data = hdulist[4].data[: self.freq_turningpoint, :]
+            self.data = 10 * np.log10(hdulist[3].data[0])[: self.freq_turningpoint, :]
+        elif date == "20220112":
+            self.data = 10 * np.log10(hdulist[3].data)[: self.freq_turningpoint, :]
+
         self.epoch = []
 
+        if date == "20201216":
+            tmp_epoch = np.array(hdulist[8].data)
+        elif date == "20201221":
+            tmp_epoch = np.array(hdulist[5].data)
+        elif date == "20201106":
+            tmp_epoch = np.array(hdulist[5].data)
+        elif date == "20201107":
+            tmp_epoch = np.array(hdulist[5].data)
+        elif date == "20220112":
+            tmp_epoch = np.array(hdulist[8].data)
+
         # データによって不要だったりするのでその都度変える必要がある
-        for i in range(hdulist[7].data.shape[0]):
+        for i in range(tmp_epoch.shape[0]):
             self.epoch = np.append(
                 self.epoch,
                 datetime.datetime.fromtimestamp(hdulist[2].data["timestamp"][0])
-                + datetime.timedelta(seconds=hdulist[7].data[i]),
+                + datetime.timedelta(seconds=float(tmp_epoch[i])),
             )
 
-        self.freq = np.array(hdulist[8].data)[: self.freq_turningpoint]
+        if date == "20201216":
+            self.freq = np.array(hdulist[9].data)[: self.freq_turningpoint]
+        elif date == "20201221":
+            self.freq = np.array(hdulist[6].data)[: self.freq_turningpoint]
+        elif date == "20201106":
+            self.freq = np.array(hdulist[6].data)[: self.freq_turningpoint]
+        elif date == "20201107":
+            self.freq = np.array(hdulist[6].data)[: self.freq_turningpoint]
+        elif date == "20220112":
+            self.freq = np.array(hdulist[9].data)[: self.freq_turningpoint]
+
         self.cut_size = (256, 256)
         self.epoch_new = []
         self.freq_new = []
@@ -48,9 +96,10 @@ class FitsHandler:
         self.freq_first_mag = 1
         self.epoch_second_mag = epoch_second_mag
         self.freq_second_mag = freq_second_mag
-        self.data = self.data[::-1, :: self.epoch_first_mag]
+        self.data = self.data[:: -1 * self.freq_first_mag, :: self.epoch_first_mag]
         self.freq = self.freq[:: self.freq_first_mag]
-        self.epoch_new = self.epoch[:: self.epoch_first_mag]  # 30260
+
+        self.epoch_new = self.epoch[:: self.epoch_first_mag]
 
         n_f = len(self.freq)
         n_e = len(self.epoch_new)

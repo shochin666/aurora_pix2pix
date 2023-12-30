@@ -36,11 +36,11 @@ def main():
     )
 
     fits = FitsHandler(original_fits_path)
-    preprocessed = Preprocess(fits, epoch_second_mag, freq_second_mag)
-    preprocessed.optimize_fits_size()
-    preprocessed.separate_fits()
-    preprocessed.predict_and_concatenate()
-    preprocessed.save()
+    # preprocessed = Preprocess(fits, epoch_second_mag, freq_second_mag)
+    # preprocessed.optimize_fits_size()
+    # preprocessed.separate_fits()
+    # preprocessed.predict_and_concatenate()
+    # preprocessed.save()
 
     # if DATA_DIRECTORY:
     #     # resolution(基本的に実行)
