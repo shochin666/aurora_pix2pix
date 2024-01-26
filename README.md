@@ -1,7 +1,7 @@
 # AURORA_PIX2PIX
 
 pix2pix を用いて [NenuFAR](https://pparc.gp.tohoku.ac.jp/hfvhf-20190921/) から提供されたデータからオーロラ電波を抽出するモデルを作成し、ノイズを含むオーロラ電波画像をノイズを除去した画像に再生成します。
-![NenuFAR](https://pparc.gp.tohoku.ac.jp/wp-content/uploads/1NeneFAR.png)
+<img width="400" alt="NenuFAR" src="https://pparc.gp.tohoku.ac.jp/wp-content/uploads/1NeneFAR.png">
 
 このリポジトリではデータの前処理・訓練済みモデルの適用を行います。
 学習は [pix2pix](https://github.com/junyanz/pytorch-CycleGAN-and-pix2pix) のオリジナルのリポジトリを改造して **Ubuntu22.04** を使用しました。
