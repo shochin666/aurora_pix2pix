@@ -2,7 +2,12 @@ import os
 import torch
 from collections import OrderedDict
 from abc import ABC, abstractmethod
+from dotenv import load_dotenv
 from . import networks
+
+
+load_dotenv()
+META_DATA_DIRECTORY = os.getenv("DATA_DIRECTORY")
 
 
 class BaseModel(ABC):
@@ -29,6 +34,7 @@ class BaseModel(ABC):
             -- self.visual_names (str list):        specify the images that you want to display and save.
             -- self.optimizers (optimizer list):    define and initialize optimizers. You can define one optimizer for each network. If two networks are updated at the same time, you can use itertools.chain to group them. See cycle_gan_model.py for an example.
         """
+
         self.opt = {
             "input_nc": 1,
             "output_nc": 1,
@@ -38,7 +44,7 @@ class BaseModel(ABC):
             "no_dropout": True,
             "init_type": "normal",
             "init_gain": 0.02,
-            "dataroot": "/Users/ogawa/Desktop/desktop_folders/data/out/test/A",
+            "dataroot": os.path.join(META_DATA_DIRECTORY, "out/test/A"),
             "name": "aurora_pix2pix",
         }
         self.isTrain = False
@@ -197,8 +203,9 @@ class BaseModel(ABC):
         """
         for name in self.model_names:
             if isinstance(name, str):
+                MODEL_DIRECTORY = os.getenv("MODEL_DIRECTORY")
                 load_filename = "%s_net_%s.pth" % (epoch, name)
-                load_path = "/Users/ogawa/Desktop/desktop_folders/aurora_pix2pix/pix2pix/latest_net_G.pth"
+                load_path = os.path.join(MODEL_DIRECTORY, "latest_net_G.pth")
                 net = getattr(self, "net" + name)
                 if isinstance(net, torch.nn.DataParallel):
                     net = net.module

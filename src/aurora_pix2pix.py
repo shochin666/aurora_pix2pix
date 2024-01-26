@@ -1,15 +1,18 @@
 import os
 import cv2
 import numpy as np
-from pix2pix.networks import define_G
+from dotenv import load_dotenv
 import torch
 import torchvision
 import matplotlib.pyplot as plt
 
+from pix2pix.networks import define_G
+
 
 class Aurora_pix2pix:
     def __init__(self):
-        self.model_file_path = "/Users/ogawa/Desktop/desktop_folders/aurora_pix2pix/pix2pix/latest_net_G.pth"
+        MODEL_DIRECTORY = os.getenv("MODEL_DIRECTORY")
+        self.model_file_path = os.path.join(MODEL_DIRECTORY, "latest_net_G.pth")
         self.device = torch.device("cpu")
 
     def load_pix2pix_generator(

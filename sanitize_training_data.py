@@ -1,11 +1,15 @@
 import os
 import shutil
+from dotenv import load_dotenv
 
 
-def main():
-    META_DATA_DIRECTORY = os.getenv(
-        "DATA_DIRECTORY", "/Users/ogawa/Desktop/desktop_folders/data"
-    )
+# prepare_for_training.pyによって生成された画像を削除するファイル.
+# 新しく訓練データを作成する前に必ずこのファイルを実行する.
+
+load_dotenv()
+META_DATA_DIRECTORY = os.getenv("DATA_DIRECTORY")
+
+if __name__ == "__main__":
     sanitized_dirs = [
         os.path.join(META_DATA_DIRECTORY, "out/random/cdf"),
         os.path.join(META_DATA_DIRECTORY, "out/random/fits"),
@@ -18,10 +22,6 @@ def main():
         os.path.join(META_DATA_DIRECTORY, "out/test/B"),
     ]
 
-    for path in sanitized_dirs:
-        shutil.rmtree(path)
-        os.mkdir(path)
-
-
-if __name__ == "__main__":
-    main()
+    for dir_path in sanitized_dirs:
+        shutil.rmtree(dir_path)
+        os.mkdir(dir_path)

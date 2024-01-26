@@ -4,11 +4,10 @@ import numpy as np
 import os
 import astropy.io.fits as fits
 from spacepy import pycdf
+from dotenv import load_dotenv
 
-
-DATA_DIRECTORY = os.getenv(
-    "DATA_DIRECTORY", "/Users/ogawa/Desktop/desktop_folders/data"
-)
+load_dotenv()
+DATA_DIRECTORY = os.getenv("DATA_DIRECTORY")
 
 
 def integration_for_training(out_file_index, last_file_num, cdf_combo=False):

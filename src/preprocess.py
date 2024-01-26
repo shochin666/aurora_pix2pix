@@ -1,20 +1,22 @@
 import numpy as np
 import os
-import subprocess
 import cv2
 import shutil
-from aurora_pix2pix import Aurora_pix2pix
-import torchvision
+from dotenv import load_dotenv
+
+from .aurora_pix2pix import Aurora_pix2pix
 from torchvision import transforms
 from .normalize import min_max
 
 
+load_dotenv()
+DATA_DIRECTORY = os.getenv("DATA_DIRECTORY")
+MODEL_DIRECTORY = os.getenv("MODEL_DIRECTORY")
+
+
 class Preprocess:
     def __init__(self, data_original, epoch_second_mag, freq_second_mag, extension):
-        self.DATA_DIRECTORY = os.getenv(
-            "DATA_DIRECTORY", "/Users/ogawa/Desktop/desktop_folders/data"
-        )
-        self.model_file_path = "/Users/ogawa/Desktop/desktop_folders/aurora_pix2pix/pix2pix/latest_net_G.pth"
+        self.model_file_path = os.path.join(MODEL_DIRECTORY, "latest_net_G.pth")
         self.model = Aurora_pix2pix()
         self.netG = self.model.load_pix2pix_generator(self.model_file_path)
 
@@ -46,7 +48,7 @@ class Preprocess:
         whole_data = np.array(self.data_optimized.copy())
 
         self.save_directory_path = os.path.join(
-            self.DATA_DIRECTORY, f"out/separate/{self.data_title}"
+            DATA_DIRECTORY, f"out/separate/{self.data_title}"
         )
 
         # separateファイル保存先ディレクトリ作成
@@ -64,17 +66,14 @@ class Preprocess:
         self.reconstructed_jpg = np.zeros((self.optimized_height, self.optimized_width))
 
         translated_jpg_directory_path = os.path.join(
-            self.DATA_DIRECTORY, f"out/separate/tmp_{self.data_title}"
+            DATA_DIRECTORY, f"out/separate/tmp_{self.data_title}"
         )
-
-        # shutil.rmtree(saved_jpg_directory)
         os.mkdir(translated_jpg_directory_path)
 
         for i in range(self.vertical_loop):
             for j in range(self.horizontal_loop):
                 saved_jpg_path = os.path.join(self.save_directory_path, f"{i}_{j}.jpg")
                 transform = transforms.ToTensor()
-                # print(cv2.imread(saved_jpg_path, cv2.IMREAD_GRAYSCALE).shape)
                 data = transform(cv2.imread(saved_jpg_path, cv2.IMREAD_GRAYSCALE))
 
                 translated_data = (
@@ -94,18 +93,13 @@ class Preprocess:
             self.reconstructed_jpg < filter_depth, 0, self.reconstructed_jpg
         )
 
-        # print(
-        #     np.min(self.reconstructed_jpg),
-        #     np.max(self.reconstructed_jpg),
-        # )
-
         shutil.rmtree(self.save_directory_path)
         shutil.rmtree(translated_jpg_directory_path)
 
     def save(self):
         cv2.imwrite(
             os.path.join(
-                self.DATA_DIRECTORY,
+                DATA_DIRECTORY,
                 f"out/RECONSTUCTED_{self.data_title}.jpg",
             ),
             self.reconstructed_jpg[::-1, :],

@@ -1,7 +1,3 @@
-# This file may be used to create an environment using:
-# $ conda create --name <env> --file <this file>
-# platform: osx-arm64
----=0.1.0=pypi_0
 aom=3.7.1=h463b476_0
 astropy=6.0.0=py310h50ce23c_0
 astropy-iers-data=0.2023.12.18.0.30.18=pyhd8ed1ab_0
@@ -156,6 +152,7 @@ pytest=7.4.3=pyhd8ed1ab_0
 pytest-shutil=1.7.0=pyhd8ed1ab_1
 python=3.10.13=h2469fbe_0_cpython
 python-dateutil=2.8.2=pyhd8ed1ab_0
+python-dotenv=1.0.1=pyhd8ed1ab_0
 python_abi=3.10=4_cp310
 pyyaml=6.0.1=py310h2aa6e3c_1
 readline=8.2=h92ec313_1

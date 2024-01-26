@@ -1,31 +1,27 @@
 import os
-from spacepy import pycdf
+import argparse
+import glob
+from dotenv import load_dotenv
+
 from src import (
     CdfHandler,
     FitsHandler,
-    save_as_cdf,
-    save_as_fits,
-    show_fullimg,
-    show_img,
     Preprocess,
 )
 
-import matplotlib.pyplot as plt
-import numpy as np
-import random
-import cv2
-import sys
-import argparse
-import glob
 
+# filterをかけて画像のコントラストを調整するファイル.そのまま/data/out/に保存される.
+# 内部的にはfilter_depthに満たないdBをゼロにすることで低dBを排除している.
+# filter_depthの値を変えることによってコントラストを調整できる(0~255).
+# Preprocessを見るとわかるが, 1枚の画像を256×256ピクセルに切り取って1枚ずつpredictして最後にそれらを繋ぎ合わせて1枚の画像を出力する
+
+load_dotenv()
+META_DATA_DIRECTORY = os.getenv("DATA_DIRECTORY")
 
 if __name__ == "__main__":
-    META_DATA_DIRECTORY = os.getenv(
-        "DATA_DIRECTORY", "/Users/ogawa/Desktop/desktop_folders/data/"
-    )
     parser = argparse.ArgumentParser(description="")
-    parser.add_argument("--date", type=str)  # example)19910103
-    parser.add_argument("--extension", type=str)  # fits or cdf
+    parser.add_argument("--date", type=str)
+    parser.add_argument("--extension", type=str)  # fitsかcdfを引数にとる
     parser.add_argument(
         "--filter_depth", type=int, default=150
     )  # 背景ノイズを除去するためのフィルタの高さ(0~255で指定)
@@ -51,7 +47,8 @@ if __name__ == "__main__":
         fits_title = files[0].split("/")[-1]
         fits = FitsHandler(os.path.join(fits_directory_path, fits_title))
 
-        # preprocess -> predict -> reconstruct -> save
+        # 一時的に/out/separate/以下にフォルダを作成して
+        # preprocess -> predict -> reconstruct -> save を行う
         preprocessed = Preprocess(fits, epoch_second_mag, freq_second_mag, extension)
         preprocessed.optimize_data_size()
         preprocessed.separate_data()

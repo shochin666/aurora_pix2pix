@@ -37,17 +37,20 @@ class FitsHandler:
 
         self.path = path
 
-        if date == "20201216":  # とくｓｇｙ
-            self.data = 10 * np.log10(hdulist[3].data)[: self.freq_turningpoint, :]
+        if date == "20201216":
+            self.raw_data = hdulist[3].data[: self.freq_turningpoint, :]
         elif date == "20201221":
-            self.data = 10 * np.log10(hdulist[3].data[0])[: self.freq_turningpoint, :]
+            self.raw_data = hdulist[3].data[0][: self.freq_turningpoint, :]
         elif date == "20201106":
-            self.data = 10 * np.log10(hdulist[3].data[0])[: self.freq_turningpoint, :]
+            self.raw_data = hdulist[3].data[0][: self.freq_turningpoint, :]
         elif date == "20201107":
             # self.data = hdulist[4].data[: self.freq_turningpoint, :]
-            self.data = 10 * np.log10(hdulist[3].data[0])[: self.freq_turningpoint, :]
+            self.raw_data = hdulist[3].data[0][: self.freq_turningpoint, :]
         elif date == "20220112":
-            self.data = 10 * np.log10(hdulist[3].data)[: self.freq_turningpoint, :]
+            self.raw_data = hdulist[3].data[: self.freq_turningpoint, :]
+
+        # maxが100くらい
+        self.data = 10 * np.log10(self.raw_data)
 
         self.epoch = []
 
@@ -124,9 +127,11 @@ class FitsHandler:
             tmp_before_epoch_list, self.freq, self.data
         )
 
-        self.data_new = min_max(
-            np.array(self.interp_2d(tmp_after_epoch_list, self.freq_new)[::-1, :])
+        self.tmp_data_for_rsn = np.array(
+            self.interp_2d(tmp_after_epoch_list, self.freq_new)[::-1, :]
         )
+
+        self.data_new = min_max(self.tmp_data_for_rsn)
 
         # print((self.freq_new[-1] - self.freq_new[0]) / len(self.freq_new))
 
