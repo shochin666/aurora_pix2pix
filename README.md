@@ -11,22 +11,22 @@ pix2pix を用いて [NenuFAR](https://pparc.gp.tohoku.ac.jp/hfvhf-20190921/) �
 
 ## STRUCTURE
 
-### **<font color="lightsteelblue">.</font>**
+### **<span style="color: blue; ">.</span>**
 
 ルートディレクトリ直下にスクリプトファイルを配置しています。主にこれらのファイルを実行することでリポジトリを利用可能です。
 
-### **<font color="lightsteelblue">./pix2pix</font>**
+### **<span style="color: blue; ">./pix2pix</span>**
 
 配下にモデルの学習で得られたパラメータのバイナリファイル(latest_net_G.pth)を配置します。ファイル名は latest_net_G.pth 以外は設定しないでください。
 
-### **<font color="lightsteelblue">./src</font>**
+### **<span style="color: blue; ">./src</span>**
 
 配下で自作モジュールを管理します。ここで作成したモジュールはスクリプトファイルでインポートされモジュールとして利用されます。もし、新たに追加したいモジュールがあれば **/src** 以下に作成し、それをスクリプトファイルで実行するようにするのが良いです。
 
 ## TRAINING
 
 まず、データセットを作成する前にパッケージのインストールを以下のコマンドから行います。
-**<font color="lightsteelblue">env_name</font>** に任意の仮想環境名を指定し、ルートディレクトリ上で以下を実行します。
+**<span style="color: blue; ">env_name</span>** に任意の仮想環境名を指定し、ルートディレクトリ上で以下を実行します。
 
 ```
 $ conda create -n [env_name] --file requirements.txt
@@ -36,10 +36,10 @@ Ubuntu22.04 を [WSL2](https://qiita.com/matarillo/items/61a9ead4bfe2868a0b86) �
 
 ## SETTINGS
 
-実際に画像を再生成する際は抽出したニューラルネットワークのパラメータを格納したバイナリファイル(latest\*net_G.pth)を参照し、**<font color="lightsteelblue">pix2pix/networks.py</font>** にパラメータを適用してモデルを利用します。
-まず、/pix2pix 直下にモデルの訓練で作成した **<font color="lightsteelblue">latest_net_G.pth</font>** を配置します。これでモデルのパスが通りました。
+実際に画像を再生成する際は抽出したニューラルネットワークのパラメータを格納したバイナリファイル(latest_net_G.pth)を参照し、**<span style="color: blue; ">pix2pix/networks.py</span>** にパラメータを適用してモデルを利用します。
+まず、/pix2pix 直下にモデルの訓練で作成した **<span style="color: blue; ">latest_net_G.pth</span>** を配置します。これでモデルのパスが通りました。
 
-次に、データを格納するための **<font color="lightsteelblue">data</font>**ディレクトリをルートディレクトリと同じ階層に作成します。その後、以下の階層をもとに各サブディレクトリを作成していきます。
+次に、データを格納するための **<span style="color: blue; ">data</span>**ディレクトリをルートディレクトリと同じ階層に作成します。その後、以下の階層をもとに各サブディレクトリを作成していきます。
 
 ```
 .
@@ -63,7 +63,7 @@ Ubuntu22.04 を [WSL2](https://qiita.com/matarillo/items/61a9ead4bfe2868a0b86) �
         └── B
 ```
 
-用いるデータをセットします。**<font color="lightsteelblue">./cdf</font>** もしくは **<font color="lightsteelblue">./fits</font>** 配下に **<font color="lightsteelblue">[日付]/[その日付の CDF もしくは FITS ファイル]</font>**としてファイルを以下のようにセットします。
+用いるデータをセットします。**<span style="color: blue; ">./cdf</span>** もしくは **<span style="color: blue; ">./fits</span>** 配下に **<span style="color: blue; ">[日付]/[その日付の CDF もしくは FITS ファイル]</span>**としてファイルを以下のようにセットします。
 
 ```
 ├── 19910101
