@@ -55,8 +55,8 @@ if __name__ == "__main__":
     y_list = []
     outputs = []
 
-    # 0~255までfilter_depthを変化させて値を取得
-    for filter_depth in range(256):
+    # 0~255までfilter_heightを変化させて値を取得
+    for filter_height in range(256):
         # 計算のために必要なパラメータの初期化
         ml_sum_aurora = 0
         ml_sum_noise = 0
@@ -68,8 +68,8 @@ if __name__ == "__main__":
         # フォーカスを当てた場所(シグナルを含む512×512の画像)に絞って行う.
         for j in range(512):
             for k in range(512):
-                # filter_depthと大小を比較してfilter_depth以上のdBをシグナルとしてカウントし、未満のdBをノイズとしてカウントしてそのピクセルの配列にappend
-                if filter_depth <= partial_ml[j, k]:
+                # filter_heightと大小を比較してfilter_height以上のdBをシグナルとしてカウントし、未満のdBをノイズとしてカウントしてそのピクセルの配列にappend
+                if filter_height <= partial_ml[j, k]:
                     aurora_index_set.append([j, k])
                 else:
                     noise_index_set.append([j, k])
@@ -104,12 +104,11 @@ if __name__ == "__main__":
         # シグナルの平均値を取得
         aurora_ave = ml_sum_aurora / tmp_aurora_loop
 
-        x_list.append(filter_depth)
-        y_list.append(aurora_ave)
+        x_list.append(filter_height)
+        y_list.append(ml_sum_aurora)
 
     if len(y_list) > 1:
         plt.plot(x_list[1:], y_list[1:])
-        plt.title("filter_depthを変えていった時のシグナルの平均値")
-        plt.xlabel("filter_depth")
+        plt.xlabel("filter_height")
         plt.ylabel("aurora_average")
         plt.show()

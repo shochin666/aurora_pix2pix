@@ -46,7 +46,7 @@ if __name__ == "__main__":
         y_beginning : y_beginning + 512, x_beginning : x_beginning + 512
     ][::-1, :]
 
-    tmp_partial_raw = fits.raw_data[
+    tmp_partial_raw = fits.tmp_data_for_rsn[
         y_beginning : y_beginning + 512, x_beginning : x_beginning + 512
     ][::-1, :]
 
@@ -85,45 +85,52 @@ if __name__ == "__main__":
     for i in range(512):
         for j in range(512):
             if filter <= partial_ml[i, j]:
-                if filter == partial_ml[i, j]:
+                if partial_ml[i, j] == filter:
                     noise_index_set.append([i, j])
                 else:
                     aurora_index_set.append([i, j])
 
-    aurora_loop = np.array(aurora_index_set).shape[0]
-    noise_loop = np.array(noise_index_set).shape[0]
+        aurora_loop = np.array(aurora_index_set).shape[0]
+        noise_loop = np.array(noise_index_set).shape[0]
 
-    # ML処理前
-    if aurora_loop != 0:
-        for k in range(aurora_loop):
-            if len(aurora_index_set) != 0:
-                raw_sum_aurora += tmp_partial_raw[
-                    aurora_index_set[k][0], aurora_index_set[k][1]
-                ]
+        # ML処理前
+        if aurora_loop != 0:
+            for k in range(aurora_loop):
+                if len(aurora_index_set) != 0:
+                    raw_sum_aurora += tmp_partial_raw[
+                        aurora_index_set[k][0], aurora_index_set[k][1]
+                    ]
 
-    if noise_loop != 0:
-        for l in range(noise_loop):
-            if len(noise_index_set) != 0:
-                raw_sum_noise += tmp_partial_raw[
-                    noise_index_set[l][0], noise_index_set[l][1]
-                ]
+        if noise_loop != 0:
+            for l in range(noise_loop):
+                if len(noise_index_set) != 0:
+                    raw_sum_noise += tmp_partial_raw[
+                        noise_index_set[l][0], noise_index_set[l][1]
+                    ]
 
-    # ML処理後
-    if aurora_loop != 0:
-        for k in range(aurora_loop):
-            if len(aurora_index_set) != 0:
-                ml_sum_aurora += tmp_partial_ml[
-                    aurora_index_set[k][0], aurora_index_set[k][1]
-                ]
+        # ML処理後
+        if aurora_loop != 0:
+            for k in range(aurora_loop):
+                if len(aurora_index_set) != 0:
+                    ml_sum_aurora += tmp_partial_ml[
+                        aurora_index_set[k][0], aurora_index_set[k][1]
+                    ]
 
-    if noise_loop != 0:
-        for l in range(noise_loop):
-            if len(noise_index_set) != 0:
-                ml_sum_noise += tmp_partial_ml[
-                    noise_index_set[l][0], noise_index_set[l][1]
-                ]
+        if noise_loop != 0:
+            for l in range(noise_loop):
+                if len(noise_index_set) != 0:
+                    ml_sum_noise += tmp_partial_ml[
+                        noise_index_set[l][0], noise_index_set[l][1]
+                    ]
 
-    raw_sn_ratio = raw_sum_aurora / raw_sum_noise
-    ml_sn_ratio = ml_sum_aurora / ml_sum_noise
+        raw_sn_ratio = raw_sum_aurora / raw_sum_noise
+        ml_sn_ratio = ml_sum_aurora / ml_sum_noise
+
+    #     x_list.append(filter)
+    #     y_list.append(ml_sn_ratio / raw_sn_ratio)
+
+    # plt.plot(x_list, y_list)
+    # plt.show()
 
     print(f"SN比はRAW: {raw_sn_ratio}, SN: {ml_sn_ratio}でした")
+    print(f"{ml_sn_ratio / raw_sn_ratio}倍")

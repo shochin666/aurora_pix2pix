@@ -62,7 +62,7 @@ class Preprocess:
                 )
                 cv2.imwrite(save_file_path, data)
 
-    def predict_and_concatenate(self, filter_depth):
+    def predict_and_concatenate(self, filter_height):
         self.reconstructed_jpg = np.zeros((self.optimized_height, self.optimized_width))
 
         translated_jpg_directory_path = os.path.join(
@@ -90,7 +90,7 @@ class Preprocess:
 
         self.reconstructed_jpg = min_max(self.reconstructed_jpg.copy())
         self.reconstructed_jpg = np.where(
-            self.reconstructed_jpg < filter_depth, 0, self.reconstructed_jpg
+            self.reconstructed_jpg < filter_height, 0, self.reconstructed_jpg
         )
 
         shutil.rmtree(self.save_directory_path)
