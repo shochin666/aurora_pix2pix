@@ -23,7 +23,7 @@ if __name__ == "__main__":
     parser.add_argument("--date", type=str)
     parser.add_argument("--extension", type=str)  # fitsかcdfを引数にとる
     parser.add_argument(
-        "--filter_height", type=int, default=150
+        "--filter_height", type=int, default=0
     )  # 背景ノイズを除去するためのフィルタの高さ(0~255で指定)
     args = parser.parse_args()
 
