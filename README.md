@@ -89,24 +89,24 @@ Ubuntu22.04 を [WSL2](https://qiita.com/matarillo/items/61a9ead4bfe2868a0b86) �
 ### calculate_rsn.py
 
 calculate_filter.py で算出した filter を用いて SN 比を強度に直して計算するファイル.
-引数は以下の通り.
+引数は以下の通り.<br>
 --date [データの日付]
 
 ### prepare_for_training.py
 
 pix2pix の学習のためのデータを準備するファイル.Nancay のシグナル(cdf)-NenuFAR のノイズ(fits)もしくは Nancay のシグナル(cdf)-Nancay のノイズ(cdf)でデータを作成できる.
-引数は以下の通り.
+引数は以下の通り.<br>
 
-1. Nancay のシグナル(cdf)-NenuFAR のノイズ(fits)で作成
-   --cdf_date [Nancay のシグナルとするデータの日付]
+1. Nancay のシグナル(cdf)-NenuFAR のノイズ(fits)で作成<br>
+   --cdf_date [Nancay のシグナルとするデータの日付]<br>
    --fits_date [NenuFAR のノイズとするデータの日付]
 
-2. Nancay のシグナル(cdf)-Nancay(cdf) のノイズで作成
-   --cdf1_date [Nancay のシグナルとするデータの日付]
+2. Nancay のシグナル(cdf)-Nancay(cdf) のノイズで作成<br>
+   --cdf1_date [Nancay のシグナルとするデータの日付]<br>
    --cdf2_date [Nancay のノイズとするデータの日付]
 
---random_file_num [データセット作成する際にランダムで切り取る画像の数]
---integration_file_num [random_file_num で切り取った画像をランダムに組み合わせ最終的に作成するデータセットの数]
+--random_file_num [データセット作成する際にランダムで切り取る画像の数]<br>
+--integration_file_num [random_file_num で切り取った画像をランダムに組み合わせ最終的に作成するデータセットの数]<br>
 
 実行例
 
@@ -117,10 +117,10 @@ $ python prepare_for_training.py --cdf_date 20161001 --fits_date 20201216 --rand
 ### reconstruct.py
 
 filter をかけて画像のコントラストを調整するファイル.そのまま/data/out に保存される.
-引数は以下の通り.
+引数は以下の通り.<br>
 
---date [モデルを適用するデータの日付]
---extension [データの拡張子を fits か cdf で指定]
+--date [モデルを適用するデータの日付]<br>
+--extension [データの拡張子を fits か cdf で指定]<br>
 --filter_height [0~255 で設定.設定した高さより低い dB は 0 に置き換えコントラストを上げる.デフォルト値は 0]
 
 ### sanitize_training_data.py
@@ -130,8 +130,8 @@ prepare_for_training.py によって生成された画像を削除するファ�
 ### show_current_data.py
 
 生データを画像として表示したい時に実行するファイル.
-引数は以下の通り.
+引数は以下の通り.<br>
 
---date [モデルを適用するデータの日付]
---extension [データの拡張子を fits か cdf で指定]
+--date [モデルを適用するデータの日付]<br>
+--extension [データの拡張子を fits か cdf で指定]<br>
 --highlight [値は引数に取らず, --highlight だけを記述.画像を 256px*256px で切り抜く際に参考にするターゲットを表示(ターゲットの座標はファイル内で変更できる)]
