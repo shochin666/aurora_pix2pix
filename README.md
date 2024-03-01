@@ -29,7 +29,8 @@ pix2pix を用いて [NenuFAR](https://pparc.gp.tohoku.ac.jp/hfvhf-20190921/) �
 **env_name** に任意の仮想環境名を指定し, ルートディレクトリ上で以下を実行します.
 
 ```
-$ conda create -n [env_name] --file requirements.txt
+$ conda env create -f  requirements.yaml
+
 ```
 
 Ubuntu22.04 を [WSL2](https://qiita.com/matarillo/items/61a9ead4bfe2868a0b86) 上で起動して訓練を行います.環境構築は [miniconda](https://docs.conda.io/projects/miniconda/en/latest/) を使って仮想環境を用いて行います.以下にパッケージリストを掲載予定です.
