@@ -1,5 +1,7 @@
 # AURORA_PIX2PIX
 
+<img width="500" alt="NenuFAR" src="./README_images/preview.png">
+
 pix2pix を用いて [NenuFAR](https://pparc.gp.tohoku.ac.jp/hfvhf-20190921/) から提供されたデータからオーロラ電波を抽出するモデルを作成し, ノイズを含むオーロラ電波画像をノイズを除去した画像に再生成します.
 
 <img width="400" alt="NenuFAR" src="https://pparc.gp.tohoku.ac.jp/wp-content/uploads/1NeneFAR.png">
@@ -25,14 +27,36 @@ pix2pix を用いて [NenuFAR](https://pparc.gp.tohoku.ac.jp/hfvhf-20190921/) �
 
 ## TRAINING
 
+Ubuntu22.04 を [WSL2](https://qiita.com/matarillo/items/61a9ead4bfe2868a0b86) 上で起動して訓練を行います.環境構築は [miniconda](https://docs.conda.io/projects/miniconda/en/latest/) を使って仮想環境を用いて行います.
+
+```
+Ubuntu22.04で以下と同様の環境を構築するためのYAMLファイルを作成予定です.
+```
+
+## OPERATION
+
+学習が完了している OR 私がすでに学習を行い、出力した重みバイナリファイル(latest_net_G.pth)をあらかじめ Drive からダウンロードしていれば、macOS や Windows 上で pix2pix のテストを行うことが可能となります.
 まず, データセットを作成する前にパッケージのインストールを以下のコマンドから行います.
-**env_name** に任意の仮想環境名を指定し, ルートディレクトリ上で以下を実行します.
+ルートディレクトリ上で実行してください.
+また、 **使用しているホスト OS により参照する YAML ファイルが異なる** ので注意してください.
+
+**macOS**
 
 ```
-$ conda env create -f  requirements.yaml
+$ conda env create -f osx_environment.yml
 ```
 
-Ubuntu22.04 を [WSL2](https://qiita.com/matarillo/items/61a9ead4bfe2868a0b86) 上で起動して訓練を行います.環境構築は [miniconda](https://docs.conda.io/projects/miniconda/en/latest/) を使って仮想環境を用いて行います.以下にパッケージリストを掲載予定です.
+**Windows11**
+
+```
+$ conda env create -f win_environment.yml
+```
+
+実行されたら **aurora_analysis** という miniconda 仮想環境が作成されていることを以下のコマンドを実行して確認します.
+
+```
+$ conda info -e
+```
 
 ## SETTINGS
 
